@@ -10,7 +10,7 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello World",
+			"message": "Rest API with JWT",
 		})
 	})
 
