@@ -7,6 +7,14 @@ import (
 )
 
 func PostsSeeder(db *gorm.DB) {
+
+	var count int64
+	db.Model(&models.Post{}).Count(&count)
+
+	if count > 0 {
+		return
+	}
+
 	posts := []models.Post{
 		{
 			Title:   "First Post",

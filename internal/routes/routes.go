@@ -8,21 +8,28 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Rest API with JWT",
-		})
-	})
 
-	router.POST("/login", handlers.Login)
-	router.POST("/register", handlers.Register)
-
-	postGroup := router.Group("/posts")
-	postGroup.Use(middlewares.JWTAuth())
+	//api version 1
+	v1 := router.Group("/api/v1")
 	{
-		postGroup.GET("/", handlers.GetPosts)
-		postGroup.POST("/", handlers.CreatePost)
+		v1.GET("/", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "Rest API with JWT version 1",
+			})
+		})
+
+		v1.POST("/login", handlers.Login)
+		v1.POST("/register", handlers.Register)
+
+		postGroupV1 := v1.Group("/posts")
+		postGroupV1.Use(middlewares.JWTAuth())
+		{
+			postGroupV1.GET("/", handlers.GetPosts)
+			postGroupV1.POST("/", handlers.CreatePost)
+		}
 	}
+
+	//api version 2
 
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{

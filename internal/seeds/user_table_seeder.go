@@ -8,6 +8,13 @@ import (
 )
 
 func UsersSeeder(db *gorm.DB) {
+	var count int64
+	db.Model(&models.User{}).Count(&count)
+
+	if count > 0 {
+		return
+	}
+
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
 	users := []models.User{
 		{
