@@ -13,7 +13,7 @@ A simple Go-based REST API project using JWT authentication, GORM for ORM, and G
 ## Requirements
 
 - Go 1.18+
-- PostgreSQL (or any other database that GORM supports, but SQLite is used in this example)
+- MySQL (or any other database that GORM supports)
 - GIN web framework
 - GORM for ORM
 - Gormigrate for database migrations
