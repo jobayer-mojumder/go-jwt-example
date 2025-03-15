@@ -4,7 +4,7 @@ import (
 	"go-jwt-project/internal/http/requests"
 	"go-jwt-project/internal/logger"
 	"go-jwt-project/internal/models"
-	"go-jwt-project/internal/pkg/auth"
+	"go-jwt-project/internal/packages/auth"
 	"go-jwt-project/internal/repositories"
 	"go-jwt-project/internal/utils"
 	"net/http"

@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"go-jwt-project/internal/pkg/auth"
+	"go-jwt-project/internal/packages/auth"
 	"go-jwt-project/internal/utils"
 	"net/http"
 	"strings"
