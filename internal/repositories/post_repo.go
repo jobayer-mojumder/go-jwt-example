@@ -9,7 +9,12 @@ import (
 )
 
 func CreatePost(post *models.Post) error {
-	return database.DB.Create(post).Error
+
+	if err := database.DB.Create(post).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetPosts(db *gorm.DB) ([]models.Post, error) {

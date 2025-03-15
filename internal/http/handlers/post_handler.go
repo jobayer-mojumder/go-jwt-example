@@ -5,10 +5,13 @@ import (
 	"go-jwt-project/internal/http/requests"
 	"go-jwt-project/internal/http/responses"
 	"go-jwt-project/internal/models"
+	"go-jwt-project/internal/pkg/auth"
 	"go-jwt-project/internal/repositories"
+	"go-jwt-project/internal/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 )
 
 func CreatePost(c *gin.Context) {
@@ -19,41 +22,57 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
-	var post models.Post
-	post.Title = createPostRequest.Title
-	post.Content = createPostRequest.Content
+	post := models.Post{
+		Title:   createPostRequest.Title,
+		Content: createPostRequest.Content,
+	}
 
-	userID, _ := c.Get("userID")
-	post.UserID = userID.(uint)
-
-	if err := repositories.CreatePost(&post); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create post"})
+	userID, err := auth.GetUserIDFromJWTGinContext(c)
+	if err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Could not get user ID from JWT")
 		return
 	}
 
-	c.JSON(http.StatusCreated, post)
+	post.UserID = userID
+
+	if err := repositories.CreatePost(&post); err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Could not create post")
+		return
+	}
+
+	// Preload the user data associated with the post
+	var createdPost models.Post
+	if err := database.DB.Preload("User").First(&createdPost, post.ID).Error; err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Could not retrieve post data")
+		return
+	}
+
+	var response responses.PostResponse
+	if err := copier.Copy(&response, &createdPost); err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Error copying post data")
+		return
+	}
+
+	utils.SendSuccessResponse(c, http.StatusCreated, response)
 }
 
 func GetPosts(c *gin.Context) {
 	posts, err := repositories.GetPosts(database.DB)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve posts"})
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Could not retrieve posts")
 		return
 	}
 
 	var response []responses.PostResponse
 	for _, post := range posts {
-		response = append(response, responses.PostResponse{
-			ID:      post.ID,
-			Title:   post.Title,
-			Content: post.Content,
-			User: responses.UserResponse{
-				ID:    post.User.ID,
-				Name:  post.User.Name,
-				Email: post.User.Email,
-			},
-		})
+		var postResponse responses.PostResponse
+		if err := copier.Copy(&postResponse, &post); err != nil {
+			utils.SendErrorResponse(c, http.StatusInternalServerError, "Error copying post data")
+			return
+		}
+
+		response = append(response, postResponse)
 	}
 
-	c.JSON(http.StatusOK, response)
+	utils.SendSuccessResponse(c, http.StatusOK, response)
 }

@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"go-jwt-project/internal/pkg/auth"
 	"net/http"
 	"strings"
@@ -26,8 +27,11 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("userID", claims["user_id"])
-		c.Set("e", claims["username"])
+		c.Set("id", claims["id"])
+		c.Set("email", claims["email"])
+
+		fmt.Printf("User ID: %v\n", claims["id"].(float64)) // Prints the actual user ID
+		fmt.Printf("Email: %v\n", claims["email"].(string)) // Prints the actual email
 		c.Next()
 	}
 }

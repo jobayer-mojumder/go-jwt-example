@@ -5,8 +5,8 @@ import (
 	"go-jwt-project/internal/database"
 	"go-jwt-project/internal/database/migrations"
 	"go-jwt-project/internal/database/seeds"
-	"go-jwt-project/internal/helpers"
 	"go-jwt-project/internal/routes"
+	"go-jwt-project/internal/utils"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +26,7 @@ func main() {
 	// run all seeds
 	seeds.Run(database.DB)
 
-	port := helpers.GetEnv("PORT", "8080")
+	port := utils.GetEnv("PORT", "8080")
 
 	router := gin.Default()
 	routes.SetupRoutes(router)
