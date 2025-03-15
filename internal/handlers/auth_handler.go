@@ -4,6 +4,7 @@ import (
 	"go-jwt-project/internal/models"
 	"go-jwt-project/internal/pkg/auth"
 	"go-jwt-project/internal/repositories"
+	"go-jwt-project/internal/requests"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,13 +12,15 @@ import (
 )
 
 func Login(c *gin.Context) {
-	email := c.PostForm("email")
-	password := c.PostForm("password")
 
-	if email == "" || password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "email and password are required"})
+	var loginRequest requests.LoginRequest
+	if err := c.ShouldBind(&loginRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	email := loginRequest.Email
+	password := loginRequest.Password
 
 	user, err := repositories.GetUserByEmail(email)
 	if err != nil {
@@ -42,14 +45,16 @@ func Login(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
-	email := c.PostForm("email")
-	password := c.PostForm("password")
-	name := c.PostForm("name")
 
-	if email == "" || password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "email and password are required"})
+	var registerRequest requests.RegisterRequest
+	if err := c.ShouldBind(&registerRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	name := registerRequest.Name
+	email := registerRequest.Email
+	password := registerRequest.Password
 
 	if _, err := repositories.GetUserByEmail(email); err == nil {
 		c.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
