@@ -66,43 +66,16 @@ go run ./cmd/api
 The following endpoints are available:
 
 #### Public Routes
-- `GET /v1/`: Returns a "Hello World" message.
+- `GET /v1/`: Returns a success message.
+- `POST /v1/register`: Register user with name, email, password
 - `POST /v1/login`: Logs in a user and returns a JWT token.
 
 #### Private Routes (Requires JWT token in Authorization header)
 - `GET /v1/posts`: Returns a list of posts.
 - `POST /v1/posts`: Creates a new post.
 
-You can test the API using tools like Postman or `curl`.
+You can test the API using tools like Postman or `curl`. Postman collection added for testing.
 
 ### Testing Authentication
 
 To test authentication, you need to log in via `POST /v1/login` with a username and password (hardcoded in the seed). The response will contain a JWT token. Pass this token in the `Authorization` header as `Bearer <your_token>` for any subsequent requests to protected routes.
-
-
-## Database Migrations
-
-This project uses **Gormigrate** for database migrations.
-
-To create new migrations, create a migration file in the `migrations` folder and run the migrations in `main.go`. For example:
-
-```go
-package migrations
-
-import (
-	"github.com/go-gormigrate/gormigrate/v2"
-	"gorm.io/gorm"
-)
-
-func CreatePostTableMigration() *gormigrate.Migration {
-	return &gormigrate.Migration{
-		ID: "2025_03_15_002", // Migration ID
-		Migrate: func(tx *gorm.DB) error {
-			return tx.AutoMigrate(&models.Post{})
-		},
-		Rollback: func(tx *gorm.DB) error {
-			return tx.Migrator().DropTable(&models.Post{})
-		},
-	}
-}
-```

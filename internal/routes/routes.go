@@ -14,6 +14,7 @@ func SetupRoutes(router *gin.Engine) {
 	{
 		v1.GET("/", func(c *gin.Context) {
 			c.JSON(200, gin.H{
+				"status":  "success",
 				"message": "Rest API with JWT version 1",
 			})
 		})
