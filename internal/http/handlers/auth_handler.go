@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"go-jwt-project/internal/http/requests"
+	"go-jwt-project/internal/logger"
 	"go-jwt-project/internal/models"
 	"go-jwt-project/internal/pkg/auth"
 	"go-jwt-project/internal/repositories"
@@ -16,6 +17,7 @@ func Login(c *gin.Context) {
 
 	var loginRequest requests.LoginRequest
 	if err := c.ShouldBind(&loginRequest); err != nil {
+		logger.LogError(err, "Failed to bind JSON request")
 		utils.SendErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -48,6 +50,7 @@ func Register(c *gin.Context) {
 
 	var registerRequest requests.RegisterRequest
 	if err := c.ShouldBind(&registerRequest); err != nil {
+		logger.LogError(err, "Failed to bind JSON request")
 		utils.SendErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}

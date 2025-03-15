@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"fmt"
 	"go-jwt-project/internal/pkg/auth"
+	"go-jwt-project/internal/utils"
 	"net/http"
 	"strings"
 
@@ -13,7 +13,7 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token required"})
+			utils.SendErrorResponse(c, http.StatusUnauthorized, "Authorization header is required")
 			c.Abort()
 			return
 		}
@@ -22,16 +22,13 @@ func JWTAuth() gin.HandlerFunc {
 
 		_, claims, err := auth.ValidateJWT(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			utils.SendErrorResponse(c, http.StatusUnauthorized, "Invalid token")
 			c.Abort()
 			return
 		}
 
 		c.Set("id", claims["id"])
 		c.Set("email", claims["email"])
-
-		fmt.Printf("User ID: %v\n", claims["id"].(float64)) // Prints the actual user ID
-		fmt.Printf("Email: %v\n", claims["email"].(string)) // Prints the actual email
 		c.Next()
 	}
 }

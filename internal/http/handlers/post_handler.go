@@ -4,6 +4,7 @@ import (
 	"go-jwt-project/internal/database"
 	"go-jwt-project/internal/http/requests"
 	"go-jwt-project/internal/http/responses"
+	"go-jwt-project/internal/logger"
 	"go-jwt-project/internal/models"
 	"go-jwt-project/internal/pkg/auth"
 	"go-jwt-project/internal/repositories"
@@ -18,7 +19,10 @@ func CreatePost(c *gin.Context) {
 	var createPostRequest requests.CreatePostRequest
 
 	if err := c.ShouldBindJSON(&createPostRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+		logger.LogError(err, "Failed to bind JSON request")
+
+		utils.SendErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
