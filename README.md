@@ -58,7 +58,7 @@ Ensure your database is up and running. I am using MySQL for this project. Updat
 Migrations and seeders will automatically run when the project starts. To start the server, use the following command:
 
 ```bash
-go run ./cmd/api
+go run ./app/api
 ```
 
 ### API Endpoints
