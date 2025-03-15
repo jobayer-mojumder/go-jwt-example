@@ -12,7 +12,7 @@ A simple Go-based REST API project using JWT authentication, GORM for ORM, and G
 
 ## Requirements
 
-- Go 1.18+
+- Go 1.24+
 - MySQL (or any other database that GORM supports)
 - GIN web framework
 - GORM for ORM
