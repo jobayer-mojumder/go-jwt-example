@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"go-jwt-project/internal/database"
+	"go-jwt-project/internal/http/requests"
+	"go-jwt-project/internal/http/responses"
 	"go-jwt-project/internal/models"
 	"go-jwt-project/internal/repositories"
 	"net/http"
@@ -9,11 +12,16 @@ import (
 )
 
 func CreatePost(c *gin.Context) {
-	var post models.Post
-	if err := c.ShouldBindJSON(&post); err != nil {
+	var createPostRequest requests.CreatePostRequest
+
+	if err := c.ShouldBindJSON(&createPostRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	var post models.Post
+	post.Title = createPostRequest.Title
+	post.Content = createPostRequest.Content
 
 	userID, _ := c.Get("userID")
 	post.UserID = userID.(uint)
@@ -27,11 +35,27 @@ func CreatePost(c *gin.Context) {
 }
 
 func GetPosts(c *gin.Context) {
-	posts, err := repositories.GetPosts()
+	posts, err := repositories.GetPosts(database.DB)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve posts"})
 		return
 	}
 
-	c.JSON(http.StatusOK, posts)
+	// make custom response and exclude user password
+	// Create a slice of PostResponse structs
+	var response []responses.PostResponse
+	for _, post := range posts {
+		response = append(response, responses.PostResponse{
+			ID:      post.ID,
+			Title:   post.Title,
+			Content: post.Content,
+			User: responses.UserResponse{
+				ID:    post.User.ID,
+				Name:  post.User.Name,
+				Email: post.User.Email,
+			},
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }

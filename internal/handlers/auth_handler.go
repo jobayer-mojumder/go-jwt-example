@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"go-jwt-project/internal/http/requests"
 	"go-jwt-project/internal/models"
 	"go-jwt-project/internal/pkg/auth"
 	"go-jwt-project/internal/repositories"
-	"go-jwt-project/internal/requests"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

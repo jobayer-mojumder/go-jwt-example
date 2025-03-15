@@ -3,6 +3,7 @@ package middlewares
 import (
 	"go-jwt-project/internal/pkg/auth"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,9 +17,11 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
+		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
 		_, claims, err := auth.ValidateJWT(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}
