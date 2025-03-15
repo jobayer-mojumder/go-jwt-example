@@ -54,24 +54,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "sample",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "test@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "123456",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"sample\",\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123456\",\n    \"confirm_password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{url}}/register",
@@ -94,19 +83,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "email",
-							"value": "test@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "123456",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{url}}/login",
@@ -115,6 +98,81 @@
 					],
 					"path": [
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts_Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"demo title\",\n    \"content\": \"demo content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/posts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts_all",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/posts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"posts"
 					]
 				}
 			},
@@ -147,6 +205,11 @@
 		{
 			"key": "url",
 			"value": "http://localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiZXhwIjoxNzQyMTYzNjM3LCJpZCI6MX0.zz-GRaYAvitSMz9Shak5QolAEFFRgbTv_7fFzAtDo04",
 			"type": "string"
 		}
 	]
