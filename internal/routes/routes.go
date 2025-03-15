@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"go-jwt-project/internal/handlers"
-	"go-jwt-project/internal/middlewares"
+	"go-jwt-project/internal/http/handlers"
+	"go-jwt-project/internal/http/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

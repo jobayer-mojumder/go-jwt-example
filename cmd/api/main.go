@@ -3,10 +3,10 @@ package main
 import (
 	"go-jwt-project/internal/config"
 	"go-jwt-project/internal/database"
+	"go-jwt-project/internal/database/migrations"
+	"go-jwt-project/internal/database/seeds"
 	"go-jwt-project/internal/helpers"
-	"go-jwt-project/internal/migrations"
 	"go-jwt-project/internal/routes"
-	"go-jwt-project/internal/seeds"
 	"log"
 
 	"github.com/gin-gonic/gin"

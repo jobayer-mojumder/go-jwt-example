@@ -41,8 +41,6 @@ func GetPosts(c *gin.Context) {
 		return
 	}
 
-	// make custom response and exclude user password
-	// Create a slice of PostResponse structs
 	var response []responses.PostResponse
 	for _, post := range posts {
 		response = append(response, responses.PostResponse{
